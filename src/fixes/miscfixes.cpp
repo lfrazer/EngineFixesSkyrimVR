@@ -81,7 +81,9 @@ namespace fixes
     BGSShaderParticleGeometryData_LoadForm_ orig_BGSShaderParticleGeometryData_LoadForm;
     RelocPtr<BGSShaderParticleGeometryData_LoadForm_> vtbl_BGSShaderParticleGeometryData_LoadForm(vtbl_BGSShaderParticleGeometryData_LoadForm_offset); // vtbl[6]
 
-    RelocAddr<uintptr_t> BadUse(BadUseFuncBase_offset + 0x1AFD);
+//    RelocAddr<uintptr_t> BadUse(BadUseFuncBase_offset + 0x1AFD);
+    // offset updated for VR: func BSShadowDirectionalLight_vf_sub_1413574F0 + 0x1C6D
+    RelocAddr<uintptr_t> BadUse(BadUseFuncBase_offset + 0x1C6D);
 
     bool hk_BGSShaderParticleGeometryData_LoadForm(RE::BGSShaderParticleGeometryData* thisPtr, RE::TESFile* file)
     {
@@ -155,6 +157,7 @@ namespace fixes
         orig_BGSShaderParticleGeometryData_LoadForm = *vtbl_BGSShaderParticleGeometryData_LoadForm;
         SafeWrite64(vtbl_BGSShaderParticleGeometryData_LoadForm.GetUIntPtr(), GetFnAddr(hk_BGSShaderParticleGeometryData_LoadForm));
 
+        // NOTE: Not sure if this UAF still exist in VR... need to verify this is correct
         _VMESSAGE("patching BSShadowDirectionalLight use after free");
         {
             char patchBuffer[100] = { 0 };
