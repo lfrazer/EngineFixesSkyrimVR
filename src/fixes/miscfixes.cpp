@@ -1,15 +1,21 @@
-#include "RE/Skyrim.h"
-#include "REL/Relocation.h"
-#include "SKSE/API.h"
-#include "SKSE/CodeGenerator.h"
-#include "SKSE/Trampoline.h"
+//#include "RE/Skyrim.h"
+
+//#include "SKSE64/API.h"
+//#include "SKSE64/CodeGenerator.h"
+#include "skse64_common/BranchTrampoline.h"
+#include "skse64_common/Relocation.h"
+#include "xbyak/xbyak.h"
 
 #include "fixes.h"
 #include "utils.h"
 
+#include "CommonLibObjs.h"
+
 
 namespace fixes
 {
+
+    /*
     // TY SniffleMan https://github.com/SniffleMan/MiscFixesSSE
     typedef void _TESObjectBook_LoadBuffer(RE::TESObjectBOOK* a_this, RE::BGSLoadFormBuffer* a_buf);
     static _TESObjectBook_LoadBuffer * orig_LoadBuffer;
@@ -61,6 +67,10 @@ namespace fixes
 
         return true;
      }
+     */
+
+
+
 
     RelocAddr<uintptr_t> BSLightingShaderMaterialSnow_vtbl(BSLightingShaderMaterialSnow_vtbl_offset);
     RelocAddr<uintptr_t> BSLightingShader_SetupMaterial_Snow_Hook(BSLightingShader_SetupMaterial_Snow_Hook_offset);
@@ -93,9 +103,9 @@ namespace fixes
         _VMESSAGE("- memory access errors -");
         _VMESSAGE("patching BSLightingShader::SetupMaterial snow material case");
         {
-            struct SetupMaterial_Snow_Hook_Code : SKSE::CodeGenerator
+            struct SetupMaterial_Snow_Hook_Code : Xbyak::CodeGenerator
             {
-                SetupMaterial_Snow_Hook_Code() : SKSE::CodeGenerator()
+                SetupMaterial_Snow_Hook_Code(void* buf) : Xbyak::CodeGenerator(256, buf)
                 {
                     Xbyak::Label vtblAddr;
                     Xbyak::Label snowRetnLabel;
@@ -129,11 +139,16 @@ namespace fixes
                 }
             };
 
-            SetupMaterial_Snow_Hook_Code code;
-            code.finalize();
+            void* codeBuf = g_localTrampoline.StartAlloc();
+            SetupMaterial_Snow_Hook_Code code(codeBuf);
+            //code.finalize();
 
-            auto trampoline = SKSE::GetTrampoline();
-            trampoline->Write6Branch(BSLightingShader_SetupMaterial_Snow_Hook.GetUIntPtr(), uintptr_t(code.getCode()));
+			g_localTrampoline.EndAlloc(code.getCurr());
+
+			g_branchTrampoline.Write6Branch(BSLightingShader_SetupMaterial_Snow_Hook.GetUIntPtr(), uintptr_t(code.getCode()));
+
+            //auto trampoline = SKSE::GetTrampoline();
+            //trampoline->Write6Branch(BSLightingShader_SetupMaterial_Snow_Hook.GetUIntPtr(), uintptr_t(code.getCode()));
         }
         _VMESSAGE("patching BGSShaderParticleGeometryData limit");
 
@@ -142,10 +157,12 @@ namespace fixes
 
         _VMESSAGE("patching BSShadowDirectionalLight use after free");
         {
+            char patchBuffer[100] = { 0 };
+
             // Xbyak is used here to generate the ASM to use instead of just doing it by hand
-            struct Patch : SKSE::CodeGenerator
+            struct Patch : Xbyak::CodeGenerator
             {
-                Patch() : SKSE::CodeGenerator(100)
+                Patch(void* buf) : Xbyak::CodeGenerator(100, buf)
                 {
                     mov(r9, r15);
                     nop();
@@ -155,8 +172,7 @@ namespace fixes
                 }
             };
 
-            Patch patch;
-            patch.finalize();
+            Patch patch(patchBuffer);
 
             for (UInt32 i = 0; i < patch.getSize(); ++i)
             {
@@ -168,7 +184,7 @@ namespace fixes
         return true;
     }
 
-
+    /*
     RelocAddr<uintptr_t> BSDistantTreeShader_VFunc3_Hook(BSDistantTreeShader_hook_offset);
 
     bool PatchTreeReflections()
@@ -423,6 +439,7 @@ namespace fixes
 
         return true;
     }
+    */
 
     bool PatchGHeapLeakDetectionCrash()
     {
@@ -442,6 +459,7 @@ namespace fixes
         return true;
     }
 
+    /*
     static int magic = 0x3CC0C0C0; // 1 / 42.5
 
     RelocPtr<float> FrameTimer_WithoutSlowTime(g_FrameTimer_NoSlowTime_offset);
@@ -637,7 +655,7 @@ namespace fixes
         }
 
     private:
-        static void Hook_Move(RE::Projectile* a_this, /*const*/ RE::NiPoint3& a_from, const RE::NiPoint3& a_to)
+        static void Hook_Move(RE::Projectile* a_this,  RE::NiPoint3& a_from, const RE::NiPoint3& a_to)
         {
             auto refShooter = a_this->shooter.get();
             if (refShooter && refShooter->Is(RE::FormType::ActorCharacter)) {
@@ -662,6 +680,7 @@ namespace fixes
 
 		return true;
 	}
+
 
   RelocAddr<uintptr_t> AnimationSignedCrash(offset_AnimationLoadSigned);
 
@@ -826,4 +845,7 @@ namespace fixes
 
         return true;
 	}
+	
+    */
+
 }

@@ -1,5 +1,7 @@
 #include <type_traits>
 
+#ifndef SKYRIMVR
+
 #include "tbb/concurrent_hash_map.h"
 
 #include "skse64/GameForms.h"
@@ -258,3 +260,5 @@ namespace patches
         return true;
     }
 }
+
+#endif

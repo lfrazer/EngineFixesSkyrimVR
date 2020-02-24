@@ -1,5 +1,7 @@
 #include "skse64_common/Utilities.h"
 
+#ifndef SKYRIMVR
+
 #include "SKSE/API.h"
 #include "SKSE/CodeGenerator.h"
 #include "SKSE/Trampoline.h"
@@ -126,3 +128,5 @@ namespace fixes
         return true;
     }
 }
+
+#endif

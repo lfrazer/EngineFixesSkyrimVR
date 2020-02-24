@@ -42,9 +42,6 @@
     <ClCompile Include="src\fixes\doubleperkapply.cpp">
       <Filter>src\fixes</Filter>
     </ClCompile>
-    <ClCompile Include="src\fixes\savescreenshots.cpp">
-      <Filter>src\fixes</Filter>
-    </ClCompile>
     <ClCompile Include="src\utils.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
     <ClCompile Include="src\patches\saveaddedsoundcategories.cpp">
       <Filter>src\patches</Filter>
     </ClCompile>
-    <ClCompile Include="src\patches\formcaching.cpp">
-      <Filter>src\patches</Filter>
-    </ClCompile>
     <ClCompile Include="src\warnings.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -74,6 +68,12 @@
     </ClCompile>
     <ClCompile Include="src\fixes\shaderfixes.cpp">
       <Filter>src\fixes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fixes\savescreenshots.cpp">
+      <Filter>src\fixes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\patches\formcaching.cpp">
+      <Filter>src\patches</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="lib\INIReader.h">
       <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommonLibObjs.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

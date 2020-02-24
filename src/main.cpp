@@ -1,6 +1,8 @@
 ﻿#include "skse64_common/Utilities.h"
 
-#include "SKSE/API.h"
+#include "skse64/PluginAPI.h"
+#include "skse64_common/BranchTrampoline.h"
+#include "skse64_common/skse_version.h"
 
 #include <sstream>
 #include <ShlObj.h>
@@ -12,12 +14,56 @@
 #include "utils.h"
 #include "warnings.h"
 
-void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
+SKSEMessagingInterface* g_messaging = nullptr;
+SKSETrampolineInterface* g_trampolineInterface = nullptr;
+PluginHandle g_pluginHandle = kPluginHandle_Invalid;
+const size_t TRAMPOLINE_SIZE = 2048;
+
+void MessageHandler(SKSEMessagingInterface::Message* a_msg)
 {
     switch (a_msg->type)
     {
-	case SKSE::MessagingInterface::kDataLoaded:
+	case SKSEMessagingInterface::kMessage_DataLoaded:
     {
+		// NEW SKSEVR feature: trampoline interface object from QueryInterface() - Use SKSE existing process code memory pool - allow Skyrim to run without ASLR
+		if (g_trampolineInterface)
+		{
+			void* branch = g_trampolineInterface->AllocateFromBranchPool(g_pluginHandle, TRAMPOLINE_SIZE);
+			if (!branch) {
+				_ERROR("couldn't acquire branch trampoline from SKSE. this is fatal. skipping remainder of init process.");
+				return;
+			}
+
+			g_branchTrampoline.SetBase(TRAMPOLINE_SIZE, branch);
+
+			void* local = g_trampolineInterface->AllocateFromLocalPool(g_pluginHandle, TRAMPOLINE_SIZE);
+			if (!local) {
+				_ERROR("couldn't acquire codegen buffer from SKSE. this is fatal. skipping remainder of init process.");
+				return;
+			}
+
+			g_localTrampoline.SetBase(TRAMPOLINE_SIZE, local);
+
+			_MESSAGE("Using new SKSEVR trampoline interface memory pool alloc for codegen buffers.");
+		}
+		else  // otherwise if using an older SKSEVR version, fall back to old code
+		{
+
+			if (!g_branchTrampoline.Create(TRAMPOLINE_SIZE))  // don't need such large buffers
+			{
+				_FATALERROR("[ERROR] couldn't create branch trampoline. this is fatal. skipping remainder of init process.");
+				return;
+			}
+
+			if (!g_localTrampoline.Create(TRAMPOLINE_SIZE, nullptr))
+			{
+				_FATALERROR("[ERROR] couldn't create codegen buffer. this is fatal. skipping remainder of init process.");
+				return;
+			}
+
+			_MESSAGE("Using legacy SKSE trampoline creation.");
+		}
+
 		_MESSAGE("beginning post-load patches");
         // patch post load so ini settings are loaded
         if (config::fixSaveScreenshots)
@@ -40,7 +86,7 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 		_MESSAGE("post-load patches complete");
     }
     break;
-	case SKSE::MessagingInterface::kPostLoadGame:
+	case SKSEMessagingInterface::kMessage_PostLoad:
         {
         if (config::warnRefHandleLimit)
         {
@@ -54,45 +100,40 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 }
 
 extern "C" {
-	bool SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
+	bool SKSEPlugin_Query(const SKSEInterface* a_skse, PluginInfo* a_info)
     {
-		SKSE::Logger::OpenRelative(FOLDERID_Documents, R"(\My Games\Skyrim Special Edition\SKSE\EngineFixes.log)");
-#ifdef _DEBUG
-		SKSE::Logger::SetPrintLevel(SKSE::Logger::Level::kDebugMessage);
-		SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kDebugMessage);
-		SKSE::Logger::TrackTrampolineStats(true);
-#else
-		SKSE::Logger::SetPrintLevel(SKSE::Logger::Level::kMessage);
-		SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kMessage);
-#endif
-		SKSE::Logger::UseLogStamp(true);
+		gLog.OpenRelative(CSIDL_MYDOCUMENTS, R"(\My Games\Skyrim VR\SKSE\EngineFixes.log)");
 
-		_MESSAGE("Engine Fixes v%s", EF_VERSION_VERSTRING);
+		gLog.SetPrintLevel(IDebugLog::kLevel_Error);
+		gLog.SetLogLevel(IDebugLog::kLevel_DebugMessage);
+
+		_MESSAGE("VR Engine Fixes v%s", EF_VERSION_VERSTRING);
 
         // populate info structure
-        a_info->infoVersion = SKSE::PluginInfo::kVersion;
-        a_info->name = "EngineFixes plugin";
+        a_info->infoVersion = PluginInfo::kInfoVersion;
+        a_info->name = "VREngineFixes plugin";
 		a_info->version = EF_VERSION_MAJOR;
 
-        if (a_skse->IsEditor())
+        if (a_skse->isEditor)
         {
             _FATALERROR("loaded in editor, marking as incompatible");
             return false;
         }
 
-		switch (a_skse->RuntimeVersion()) {
-		case RUNTIME_VERSION_1_5_97:
+		switch (a_skse->runtimeVersion) {
+		case RUNTIME_VR_VERSION_1_4_15:
 			break;
 		default:
-			_FATALERROR("Unsupported runtime version %s!\n", a_skse->UnmangledRuntimeVersion().c_str());
+			_FATALERROR("Unsupported runtime version %d!\n", a_skse->runtimeVersion);
 			return false;
 		}
 
         return true;
     }
 
-	bool SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
+	bool SKSEPlugin_Load(const SKSEInterface* a_skse)
     {
+		/*
 		if (!SKSE::Init(a_skse)) {
 			return false;
 		}
@@ -100,15 +141,15 @@ extern "C" {
 		if (!SKSE::AllocTrampoline(1 << 11)) {
 			return false;
 		}
+		*/
 
-		auto messaging = SKSE::GetMessagingInterface();
-		if (messaging->RegisterListener("SKSE", MessageHandler)) {
-			_MESSAGE("Messaging interface registration successful");
+		bool res = g_messaging->RegisterListener(g_pluginHandle, "SKSE", MessageHandler);
+		if (!res)
+		{
+			_MESSAGE("Failed to register SKSE Message handler.");
 		}
-		else {
-			_FATALERROR("Messaging interface registration failed!\n");
-			return false;
-		}
+
+		return true;
 
 		const auto runtimePath = GetRuntimeDirectory();
 
@@ -124,8 +165,8 @@ extern "C" {
 		if (config::verboseLogging)
 		{
 			_MESSAGE("enabling verbose logging");
-			SKSE::Logger::SetPrintLevel(SKSE::Logger::Level::kVerboseMessage);
-			SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kVerboseMessage);
+			//SKSE::Logger::SetPrintLevel(SKSE::Logger::Level::kVerboseMessage);
+			//SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kVerboseMessage);
 		}
 
 		_MESSAGE("beginning pre-load patches");

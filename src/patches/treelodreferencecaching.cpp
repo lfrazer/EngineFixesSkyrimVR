@@ -1,5 +1,7 @@
 #include "skse64/GameSettings.h"
 
+#ifndef SKYRIMVR
+
 #include "RE/Skyrim.h"
 #include "SKSE/API.h"
 #include "SKSE/Trampoline.h"
@@ -136,3 +138,5 @@ namespace patches
     }
 
 }
+
+#endif

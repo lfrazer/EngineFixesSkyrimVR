@@ -1,3 +1,5 @@
+#ifndef SKYRIMVR
+
 #include "RE/Skyrim.h"
 
 #include "patches.h"
@@ -121,3 +123,5 @@ namespace patches
         return true;
     }
 }
+
+#endif

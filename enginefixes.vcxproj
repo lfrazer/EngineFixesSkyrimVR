@@ -15,12 +15,12 @@
     <ProjectGuid>{E831D5DE-B2CE-42F3-B0BC-32DCDFD3ACD4}</ProjectGuid>
     <RootNamespace>EngineFixes</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
@@ -57,7 +57,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)..;$(ProjectDir)include;$(ProjectDir)lib;$(SolutionDir)CommonLibSSE\include;$(TBBROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PLUGIN_EXAMPLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PLUGIN_EXAMPLE_EXPORTS;SKYRIMVR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>
@@ -103,15 +103,15 @@ xcopy "$(TargetDir)$(TargetName)$(TargetExt)" "D:\LOTD\mods\EngineFixes-dev\skse
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)..;$(ProjectDir)include;$(ProjectDir)lib;$(SolutionDir)CommonLibSSE\include;$(TBBROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;PLUGIN_EXAMPLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)..;$(ProjectDir)include;$(ProjectDir)lib;$(SolutionDir)CommonLibSSE\include;$(TBBROOT)\include;$(SolutionDir)sksevr;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;PLUGIN_EXAMPLE_EXPORTS;SKYRIMVR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ForcedIncludeFiles>ForceInclude.h;SKSE/Logger.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>common/IPrefix.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <OmitFramePointers>
       </OmitFramePointers>
@@ -128,7 +128,8 @@ xcopy "$(TargetDir)$(TargetName)$(TargetExt)" "D:\LOTD\mods\EngineFixes-dev\skse
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>version.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;tbb.lib;skse64_common.lib;sksevr_1_4_15.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)libs_VR</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -185,6 +186,7 @@ xcopy "$(TargetDir)$(TargetName)$(TargetExt)" "D:\LOTD\mods\EngineFixes-dev\skse
     <ClCompile Include="src\warnings\miscwarnings.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\CommonLibObjs.h" />
     <ClInclude Include="include\config.h" />
     <ClInclude Include="include\fixes.h" />
     <ClInclude Include="include\offsets.h" />

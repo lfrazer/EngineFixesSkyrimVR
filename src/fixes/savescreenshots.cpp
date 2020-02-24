@@ -1,5 +1,7 @@
 #include "skse64/GameSettings.h"
 
+#ifndef SKYRIMVR
+
 #include "RE/Skyrim.h"
 #include "SKSE/API.h"
 #include "SKSE/CodeGenerator.h"
@@ -261,3 +263,5 @@ namespace fixes
         return true;
     }
 }
+
+#endif

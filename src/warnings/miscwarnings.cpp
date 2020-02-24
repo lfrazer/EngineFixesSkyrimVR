@@ -1,3 +1,5 @@
+#ifndef SKYRIMVR
+
 #include "RE/Skyrim.h"
 #include "SKSE/API.h"
 #include "SKSE/Trampoline.h"
@@ -111,3 +113,5 @@ namespace warnings
         }
     }
 }
+
+#endif

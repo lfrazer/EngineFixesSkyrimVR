@@ -1,5 +1,7 @@
 #include <intrin.h>
 
+#ifndef SKYRIMVR
+
 #include "RE/Skyrim.h"
 #include "SKSE/API.h"
 #include "SKSE/CodeGenerator.h"
@@ -325,3 +327,5 @@ namespace patches
 		return true;
 	}
 }
+
+#endif
