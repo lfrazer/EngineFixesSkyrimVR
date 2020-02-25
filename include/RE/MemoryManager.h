@@ -4,6 +4,7 @@
 #include <memory>
 #include <new>
 #include <type_traits>
+#include <assert.h>
 
 #include "RE/ScrapHeap.h"
 

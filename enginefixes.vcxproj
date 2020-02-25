@@ -20,7 +20,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
@@ -128,7 +128,7 @@ xcopy "$(TargetDir)$(TargetName)$(TargetExt)" "D:\LOTD\mods\EngineFixes-dev\skse
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>version.lib;tbb.lib;skse64_common.lib;sksevr_1_4_15.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;tbb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)libs_VR</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
@@ -158,6 +158,12 @@ xcopy "$(TargetDir)$(TargetName)$(TargetExt)" "D:\LOTD\mods\EngineFixes-dev\skse
     <ProjectReference Include="sksevr\common\common_vc14.vcxproj">
       <Project>{472e19ab-def0-42df-819b-18722e8dc822}</Project>
     </ProjectReference>
+    <ProjectReference Include="sksevr\skse64\skse64.vcxproj">
+      <Project>{639411c0-fc23-4819-a0c5-429a4e5d8a51}</Project>
+    </ProjectReference>
+    <ProjectReference Include="sksevr\skse64_common\skse64_common.vcxproj">
+      <Project>{5fd1c08d-db80-480c-a1c6-f0920005cd13}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\fixes.cpp" />
@@ -172,6 +178,10 @@ xcopy "$(TargetDir)$(TargetName)$(TargetExt)" "D:\LOTD\mods\EngineFixes-dev\skse
     <ClCompile Include="src\patches\saveaddedsoundcategories.cpp" />
     <ClCompile Include="src\fixes\shaderfixes.cpp" />
     <ClCompile Include="src\patches\treelodreferencecaching.cpp" />
+    <ClCompile Include="src\RE\BSTArray.cpp" />
+    <ClCompile Include="src\RE\IMemoryStore.cpp" />
+    <ClCompile Include="src\RE\MemoryManager.cpp" />
+    <ClCompile Include="src\RE\Relocation.cpp" />
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\warnings.cpp" />
     <ClCompile Include="src\warnings\miscwarnings.cpp" />
@@ -182,6 +192,8 @@ xcopy "$(TargetDir)$(TargetName)$(TargetExt)" "D:\LOTD\mods\EngineFixes-dev\skse
     <ClInclude Include="include\fixes.h" />
     <ClInclude Include="include\offsets.h" />
     <ClInclude Include="include\patches.h" />
+    <ClInclude Include="include\RE\Offsets.h" />
+    <ClInclude Include="include\RE\RTTI.h" />
     <ClInclude Include="include\utils.h" />
     <ClInclude Include="include\version.h" />
     <ClInclude Include="include\warnings.h" />

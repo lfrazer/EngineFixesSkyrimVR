@@ -28,6 +28,12 @@
     <Filter Include="src\warnings">
       <UniqueIdentifier>{10b029bd-95bd-4f87-9c9f-e439b0333d7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\RE">
+      <UniqueIdentifier>{1c49ff9c-56dd-447e-8e44-b16e5b2362c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\RE">
+      <UniqueIdentifier>{994fa613-efb2-48b4-8b54-b0bbd6e8e08a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -75,6 +81,18 @@
     <ClCompile Include="src\patches\formcaching.cpp">
       <Filter>src\patches</Filter>
     </ClCompile>
+    <ClCompile Include="src\RE\BSTArray.cpp">
+      <Filter>src\RE</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RE\MemoryManager.cpp">
+      <Filter>src\RE</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RE\IMemoryStore.cpp">
+      <Filter>src\RE</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RE\Relocation.cpp">
+      <Filter>src\RE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\version.h">
@@ -105,7 +123,13 @@
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="include\CommonLibObjs.h">
-      <Filter>include</Filter>
+      <Filter>include\RE</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RE\Offsets.h">
+      <Filter>include\RE</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RE\RTTI.h">
+      <Filter>include\RE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
