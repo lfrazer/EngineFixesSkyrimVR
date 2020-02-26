@@ -64,6 +64,18 @@ void MessageHandler(SKSEMessagingInterface::Message* a_msg)
 			_MESSAGE("Using legacy SKSE trampoline creation.");
 		}
 
+		_MESSAGE("WARNING: This is an experimental alpha build for Skyrim VR which does not support MOST patches! You have been warned!");
+		_MESSAGE("beginning pre-load patches");
+
+		if (config::cleanSKSECosaves)
+			CleanSKSECosaves();
+
+		patches::PatchAll();
+		fixes::PatchAll();
+		warnings::PatchAll();
+
+		_MESSAGE("pre-load patches complete");
+
 		_MESSAGE("beginning post-load patches");
         // patch post load so ini settings are loaded
       
@@ -106,7 +118,7 @@ void MessageHandler(SKSEMessagingInterface::Message* a_msg)
 extern "C" {
 	bool SKSEPlugin_Query(const SKSEInterface* a_skse, PluginInfo* a_info)
     {
-		gLog.OpenRelative(CSIDL_MYDOCUMENTS, R"(\My Games\Skyrim VR\SKSE\EngineFixes.log)");
+		gLog.OpenRelative(CSIDL_MYDOCUMENTS, R"(\My Games\Skyrim VR\SKSE\VREngineFixes.log)");
 
 		gLog.SetPrintLevel(IDebugLog::kLevel_Error);
 		gLog.SetLogLevel(IDebugLog::kLevel_DebugMessage);
@@ -130,6 +142,21 @@ extern "C" {
 		default:
 			_FATALERROR("Unsupported runtime version %d!\n", a_skse->runtimeVersion);
 			return false;
+		}
+
+		g_pluginHandle = a_skse->GetPluginHandle();
+
+		g_messaging = static_cast<SKSEMessagingInterface*>(a_skse->QueryInterface((kInterface_Messaging)));
+		if (!g_messaging)
+		{
+			_FATALERROR("[ERROR] couldn't get messaging interface");
+			return false;
+		}
+
+		g_trampolineInterface = static_cast<SKSETrampolineInterface*>(a_skse->QueryInterface(kInterface_Trampoline));
+		if (!g_trampolineInterface)
+		{
+			_MESSAGE("WARNING: Could not get new trampoline alloc interface, Using legacy SKSE VR");
 		}
 
         return true;
@@ -173,17 +200,7 @@ extern "C" {
 			//SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kVerboseMessage);
 		}
 
-		_MESSAGE("WARNING: This is an experimental alpha build for Skyrim VR which does not support MOST patches! You have been warned!");
-		_MESSAGE("beginning pre-load patches");
 
-		if (config::cleanSKSECosaves)
-			CleanSKSECosaves();
-
-		patches::PatchAll();
-		fixes::PatchAll();
-		warnings::PatchAll();
-		
-		_MESSAGE("pre-load patches complete");
         return true;
     }
 }

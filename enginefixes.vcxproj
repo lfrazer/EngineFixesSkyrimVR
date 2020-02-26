@@ -52,6 +52,7 @@
     <LinkIncremental>false</LinkIncremental>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
     <LibraryPath>$(TBBROOT)\lib\intel64\vc14;$(LibraryPath)</LibraryPath>
+    <TargetName>VREngineFixes</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

@@ -31,7 +31,7 @@ bool CleanSKSECosaves()
 {
     _VMESSAGE("- skse cosave cleaner -");
 
-    if (!InitSavePath(CSIDL_MYDOCUMENTS, R"(\My Games\Skyrim Special Edition\Saves\)"))
+    if (!InitSavePath(CSIDL_MYDOCUMENTS, R"(\My Games\Skyrim VR\Saves\)"))
     {
         _VMESSAGE("unable to find saves folder, aborting");
         return false;

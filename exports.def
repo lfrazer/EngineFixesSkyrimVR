@@ -1,4 +1,4 @@
-LIBRARY	"EngineFixes"
+LIBRARY	"VREngineFixes"
 EXPORTS
 SKSEPlugin_Query
 SKSEPlugin_Load
