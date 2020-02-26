@@ -160,7 +160,7 @@ namespace fixes
         // NOTE: Not sure if this UAF still exist in VR... need to verify this is correct
         _VMESSAGE("patching BSShadowDirectionalLight use after free");
         {
-            char patchBuffer[100] = { 0 };
+            static char patchBuffer[100] = { 0 };
 
             // Xbyak is used here to generate the ASM to use instead of just doing it by hand
             struct Patch : Xbyak::CodeGenerator

@@ -5,6 +5,7 @@ namespace fixes
 {
     bool PatchAll()
     {
+        /*
 		if (config::fixArcheryDownwardAiming)
 			PatchArcheryDownwardAiming();
 
@@ -35,15 +36,16 @@ namespace fixes
         if (config::fixGetKeywordItemCount)
             PatchGetKeywordItemCount();
 
-        if (config::fixGHeapLeakDetectionCrash)
-            PatchGHeapLeakDetectionCrash();
-
 		if (config::fixLipSync)
 			PatchLipSync();
-
+            */
         if (config::fixMemoryAccessErrors)
             PatchMemoryAccessErrors();
 
+		if (config::fixGHeapLeakDetectionCrash)
+			PatchGHeapLeakDetectionCrash();
+
+        /*
         if (config::fixMO5STypo)
             PatchMO5STypo();
 
@@ -61,6 +63,7 @@ namespace fixes
 
         if (config::fixAnimationLoadSignedCrash)
             PatchAnimationLoadSignedCrash();
+            */
 
         return true;
     }

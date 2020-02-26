@@ -66,7 +66,9 @@ void MessageHandler(SKSEMessagingInterface::Message* a_msg)
 
 		_MESSAGE("beginning post-load patches");
         // patch post load so ini settings are loaded
-        if (config::fixSaveScreenshots)
+      
+		/**
+		if (config::fixSaveScreenshots)
             fixes::PatchSaveScreenshots();
 
         if (config::warnRefHandleLimit)
@@ -82,15 +84,17 @@ void MessageHandler(SKSEMessagingInterface::Message* a_msg)
 
 		_VMESSAGE("clearing node map");
         warnings::ClearNodeMap();
+		*/
 
-		_MESSAGE("post-load patches complete");
+		_MESSAGE("Post-load patches not supported yet in VR");
+		//_MESSAGE("post-load patches complete");
     }
     break;
 	case SKSEMessagingInterface::kMessage_PostLoad:
         {
         if (config::warnRefHandleLimit)
         {
-            warnings::WarnActiveRefrHandleCount(config::warnRefrLoadedGameLimit);
+            //warnings::WarnActiveRefrHandleCount(config::warnRefrLoadedGameLimit);
         }
         }
     break;
@@ -169,6 +173,7 @@ extern "C" {
 			//SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kVerboseMessage);
 		}
 
+		_MESSAGE("WARNING: This is an experimental alpha build for Skyrim VR which does not support MOST patches! You have been warned!");
 		_MESSAGE("beginning pre-load patches");
 
 		if (config::cleanSKSECosaves)

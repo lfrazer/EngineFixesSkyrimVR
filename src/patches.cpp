@@ -4,6 +4,10 @@ namespace patches
 {
     bool PatchAll()
     {
+		if (config::patchMaxStdio)
+			PatchMaxStdio();
+
+        /*
         if (config::patchDisableChargenPrecache)
             PatchDisableChargenPrecache();
 
@@ -12,9 +16,6 @@ namespace patches
 
         if (config::patchFormCaching)
             PatchFormCaching();
-
-        if (config::patchMaxStdio)
-            PatchMaxStdio();
 
         if (config::patchRegularQuicksaves)
             PatchRegularQuicksaves();
@@ -40,6 +41,7 @@ namespace patches
         if (config::experimentalTreatAllModsAsMasters)
             PatchTreatAllModsAsMasters();
 
+            */
         return true;
     }
 }
