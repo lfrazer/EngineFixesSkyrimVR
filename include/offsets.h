@@ -113,8 +113,7 @@ constexpr uintptr_t Equip_Shout_Procedure_Function_offset = 0x006323C0;
 // E8 ? ? ? ? 48 8B 07 33 D2 48 8B CF FF 10
 
 // DIFF:  1.00    0.99    -------    0000000140FFFEB0    sub_0000000140FFFEB0    000000014105CBB0    sub_000000014105CBB0
-// TODO: Fixup for VR
-constexpr uintptr_t GHeap_Leak_Detection_Crash_offset = 0x00FFFEB0;
+constexpr uintptr_t GHeap_Leak_Detection_Crash_offset = 0x105CBB0; // VR //0x00FFFEB0;
 
 // Lip Sync Fix
 // E8 ? ? ? ? 48 8D 8F 20 01 00 00 0F 28 CE
@@ -127,11 +126,11 @@ constexpr uintptr_t BSLightingShaderMaterialSnow_vtbl_offset = 0x18FEA78; //0x01
 
 // DIFF: 0.97    0.99    GI---- - 00000001412F2020    BSLightingShader_vf_sub_1412F2020    0000000141338400    BSLightingShader_vf_sub_141338400    
 
-// TODO repair these next 2
-constexpr uintptr_t BSLightingShader_SetupMaterial_Snow_Hook_offset = 0x012F2500;
-constexpr uintptr_t BSLightingShader_SetupMaterial_Snow_Exit_offset = 0x012F25D6;
+// These are fixed for VR
+constexpr uintptr_t BSLightingShader_SetupMaterial_Snow_Hook_offset = 0x013388E0; // VR //0x012F2500;
+constexpr uintptr_t BSLightingShader_SetupMaterial_Snow_Exit_offset = 0x013389B6; // VR //0x012F25D6;
 
-constexpr uintptr_t vtbl_BGSShaderParticleGeometryData_LoadForm_offset = 0x15D7BD8;//0x0155FFA0; // vtbl[6]
+constexpr uintptr_t vtbl_BGSShaderParticleGeometryData_LoadForm_offset = 0x15D7BD8; // VR //0x0155FFA0; // vtbl[6]
 
 
 // 48 8B C4 48 89 50 10 55  53 56 57 41 54 41 55 41  56 41 57 48 8D A8 38 FB
