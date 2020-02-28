@@ -1,6 +1,10 @@
-# EngineFixes
+# VREngineFixes
 
-TODO
+Branch of Engine Fixes for SkyrimVR 1.4.15
+Only supporting the Bad memory use and max stdio fixes right now. 
+Requires special case build settings for SKSEVR - set platform v142 because of C++17 requirements from CommonLib code, which was partially ported for this.
+
+Also credit to aers for supporting the SE build and helping me out with this!
 
 ## Credits
 
