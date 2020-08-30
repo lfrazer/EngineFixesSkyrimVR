@@ -1,3 +1,7 @@
+# Archived - Obsolete now
+
+I've decided to archive this repo since RollingRock has gotten much further progress on the same mod, I will do further work on a fork of his branch.  
+
 # VREngineFixes
 
 Branch of Engine Fixes for SkyrimVR 1.4.15
